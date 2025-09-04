@@ -9,26 +9,27 @@ on:
       - live
 
 jobs:
-  build-deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      # Install Flutter
-      - uses: subosito/flutter-action@v2
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.13.0'   # put your Flutter version here
+          flutter-version: '3.24.4'  # use your Flutter version here
 
-      # Get dependencies
-      - run: flutter pub get
+      - name: Get dependencies
+        run: flutter pub get
 
-      # Build web version
-      - run: flutter build web --release
+      - name: Build web
+        run: flutter build web --release
 
-      # Deploy to Firebase Hosting
-      - uses: FirebaseExtended/action-hosting-deploy@v0
+      - name: Deploy to Firebase Hosting
+        uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_FIR_APP_658E1 }}"
-          channelId: live  # change to branch name if using preview channels
+          channelId: live  # For live deployment; change for preview channels if needed
