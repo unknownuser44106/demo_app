@@ -1,4 +1,4 @@
-name: Deploy to Firebase Hosting
+name: Firebase Hosting CI
 
 on:
   push:
@@ -9,28 +9,26 @@ on:
       - live
 
 jobs:
-  build_and_deploy:
+  build-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
+      # Install Flutter
+      - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.22.0'   # change to your Flutter version
+          flutter-version: '3.13.0'   # put your Flutter version here
 
-      - name: Install dependencies
-        run: flutter pub get
+      # Get dependencies
+      - run: flutter pub get
 
-      - name: Build Flutter web
-        run: flutter build web --release
+      # Build web version
+      - run: flutter build web --release
 
-      - name: Deploy to Firebase Hosting
-        uses: FirebaseExtended/action-hosting-deploy@v0
+      # Deploy to Firebase Hosting
+      - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_FIR_APP_658E1 }}"
-          channelId: ${{ github.ref_name }}   # dev/test/release branches deploy to preview channels
-          projectId: fir-app-658e1
+          channelId: live  # change to branch name if using preview channels
