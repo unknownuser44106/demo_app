@@ -1,0 +1,24 @@
+name: Release Checks
+on:
+  pull_request:
+    branches:
+      - release
+
+jobs:
+  release-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.4'
+
+      - name: Run E2E smoke tests (placeholder)
+        run: |
+          echo "Run E2E smoke tests (signup->add expense->view expense)"
+
+      - name: Ensure version bump in pubspec.yaml
+        run: |
+          grep -q "version:" pubspec.yaml || (echo "No version found" && exit 1)

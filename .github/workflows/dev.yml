@@ -1,0 +1,31 @@
+name: Dev CI
+on:
+  pull_request:
+    branches:
+      - dev
+
+jobs:
+  dev-ci:
+    name: Dev Checks (lint, unit tests, build)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.4'  # match your Flutter version
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Analyze (lint)
+        run: flutter analyze
+
+      - name: Run unit tests
+        run: flutter test --coverage
+
+      - name: Build web
+        run: flutter build web
